@@ -1,0 +1,7 @@
+#!/bin/bash
+# ShellCheck configuration file
+# This file is sourced by ShellCheck to configure its behavior
+
+# Disable specific warnings if needed (by code)
+# SC1091: Not following source (we handle dynamic sourcing)
+disable=SC1091
