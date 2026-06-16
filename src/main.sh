@@ -36,7 +36,7 @@ main_menu() {
             6 "View Container Logs / Attach" \
             7 "Create Stack & Data Folders" \
             8 "Open Terminal in Stacks Directory" \
-            9 "Execute Shell in Container" \
+            9 "Execute Shell in Stack Service" \
             10 "Exit")
         
         if [ $? -ne 0 ]; then
@@ -52,7 +52,7 @@ main_menu() {
             6) handle_view_logs ;;
             7) handle_create_stack ;;
             8) handle_terminal_shell ;;
-            9) handle_container_shell ;;
+            9) handle_service_shell ;;
             10) break ;;
         esac
     done
@@ -187,12 +187,22 @@ handle_terminal_shell() {
     (cd "$STACKS_DIR" && bash -i)
 }
 
-handle_container_shell() {
-    local container_name
-    container_name=$(docker_select_container "Container Shell" "Select a running container:")
+handle_service_shell() {
+    # First select a stack
+    local stack_name
+    stack_name=$(stacks_select_from_list "Select Stack for Shell" "Select stack:")
     
-    if [ -n "$container_name" ]; then
-        docker_exec_shell "$container_name"
+    if [ -n "$stack_name" ]; then
+        local compose_file
+        compose_file=$(stacks_get_compose_file "$stack_name")
+        
+        # Then select a service from that stack
+        local container_name
+        container_name=$(docker_compose_select_service "$stack_name" "$compose_file" "Select Service" "Select a service to open shell in:")
+        
+        if [ -n "$container_name" ]; then
+            docker_compose_exec_shell "$compose_file" "$container_name"
+        fi
     fi
 }
 
