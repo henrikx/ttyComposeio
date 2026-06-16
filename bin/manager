@@ -1,0 +1,7 @@
+#!/bin/bash
+# TtyComposeio Manager - Entry point wrapper
+
+BIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$BIN_DIR/.." && pwd)"
+
+exec bash "$PROJECT_ROOT/src/main.sh" "$@"
