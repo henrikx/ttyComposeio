@@ -1,0 +1,12 @@
+services:
+  web-tui-manager:
+    build: .
+    container_name: web-tui-manager
+    ports:
+      - "8080:8080"
+    volumes:
+      # Allows the container to run docker commands on the host
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Mounts your stacks directory so the script can see/edit it
+      - /opt/stacks:/opt/stacks
+    restart: unless-stopped
